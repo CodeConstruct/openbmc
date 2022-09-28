@@ -18,6 +18,19 @@ CHIPS:witherspoon = " \
                bus@1e78a000/i2c-bus@180/ir35221@71 \
                bus@1e78a000/i2c-bus@380/tmp275@4a \
                "
+CHIPS:witherspoon-microwatt = " \
+               i2c3/max31785@52 \
+               i2c3/power-supply@69 \
+               i2c3/power-supply@68 \
+               i2c3/bmp280@77 \
+               i2c3/dps310@76 \
+               i2c4/ir35221@71 \
+               i2c4/ir35221@70 \
+               i2c5/ir35221@71 \
+               i2c5/ir35221@70 \
+               i2c9/tmp275@4a \
+               "
+
 CHIPS:swift = " \
                bus@1e78a000/i2c-bus@100/max31785@52 \
                bus@1e78a000/i2c-bus@100/power-supply@68 \
@@ -69,10 +82,6 @@ CHIPS:witherspoon-tacoma = " \
                bus@1e78a000/i2c-bus@500/tmp275@4a \
                "
 
-# Need to update
-CHIPS:witherspoon-microwatt = " \
-               "
-
 CHIPS:p10bmc = " \
                bus@1e78a000/i2c-bus@200/power-supply@68 \
                bus@1e78a000/i2c-bus@200/power-supply@69 \
@@ -83,8 +92,12 @@ CHIPS:p10bmc = " \
                bus@1e78a000/i2c-bus@780/i2c-switch@70/i2c@3/max31785@52 \
                "
 
-ITEMSFMT = "ahb/apb/{0}.conf"
-ITEMS = "${@compose_list(d, 'ITEMSFMT', 'CHIPS')}"
+ITEMSFMT_aspeed = "ahb/apb/{0}.conf"
+ITEMSFMT_microwatt = "{0}.conf"
+
+ITEMS = "${@compose_list(d, 'ITEMSFMT_aspeed', 'CHIPS')}"
+ITEMS:witherspoon-microwatt = "${@compose_list(d, 'ITEMSFMT_microwatt', 'CHIPS')}"
+
 ITEMS:append:mihawk = " iio-hwmon-vdd0.conf"
 ITEMS:append:mihawk = " iio-hwmon-vdd1.conf"
 ITEMS:append:mihawk = " iio-hwmon-vcs0.conf"
