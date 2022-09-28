@@ -1,0 +1,31 @@
+{
+    "gpio_configs": {
+
+        "power_config": {
+            "power_good_in": "SYS_PWROK_BUFF",
+            "power_up_outs": [
+                {"name": "BMC_POWER_UP", "polarity": true}
+            ],
+            "reset_outs": [
+            ]
+        }
+    },
+
+    "gpio_definitions": [
+        {
+            "name": "BMC_POWER_UP",
+            "num": 10,
+            "direction": "out"
+        },
+        {
+            "name": "SYS_PWROK_BUFF",
+            "num": 9,
+            "direction": "in"
+        },
+        {
+            "name": "POWER_BUTTON",
+	    "num": 8,
+            "direction": "both"
+        }
+    ]
+}
