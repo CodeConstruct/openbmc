@@ -13,7 +13,7 @@ SRC_URI:append:ibm-ac-server = " file://${FAILOVER_TMPL}"
 SRC_URI:append:mihawk = " file://${FAILOVER_TMPL}"
 SRC_URI:append:p10bmc = " file://${LINKSPEED_TMPL}"
 
-SYSTEMD_SERVICE:${PN}:append:ibm-ac-server = " ${FAILOVER_TMPL}"
+#SYSTEMD_SERVICE:${PN}:append:ibm-ac-server = " ${FAILOVER_TMPL}"
 SYSTEMD_SERVICE:${PN}:append:mihawk = " ${FAILOVER_TMPL}"
 SYSTEMD_SERVICE:${PN}:append:p10bmc = " ${LINKSPEED_TMPL}"
 
