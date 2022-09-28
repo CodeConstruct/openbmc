@@ -1,1 +1,2 @@
 SUBSYSTEM=="misc", KERNEL=="aspeed-lpc-ctrl", TAG+="systemd"
+SUBSYSTEM=="misc", KERNEL=="microwatt-lpc-ctrl", TAG+="systemd", SYMLINK="aspeed-lpc-ctrl"
