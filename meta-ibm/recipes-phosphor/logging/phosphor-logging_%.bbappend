@@ -1,5 +1,4 @@
 PACKAGECONFIG:append:witherspoon-tacoma = " openpower-pels"
-PACKAGECONFIG:append:witherspoon-microwatt = " openpower-pels"
 PACKAGECONFIG:append:p10bmc = " openpower-pels"
 
 FILESEXTRAPATHS:prepend := "${THISDIR}/${BPN}:"
