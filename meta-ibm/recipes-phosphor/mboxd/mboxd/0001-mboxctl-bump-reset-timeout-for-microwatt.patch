@@ -1,0 +1,27 @@
+From af7dcbed6b1049a10e9dfa50feeb5b79992c74d5 Mon Sep 17 00:00:00 2001
+From: Jeremy Kerr <jk@codeconstruct.com.au>
+Date: Fri, 7 Oct 2022 13:47:53 +0800
+Subject: [PATCH] mboxctl: bump reset timeout for microwatt
+
+Signed-off-by: Jeremy Kerr <jk@codeconstruct.com.au>
+---
+ mboxctl.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/mboxctl.c b/mboxctl.c
+index ccb5848..a468dcf 100644
+--- a/mboxctl.c
++++ b/mboxctl.c
+@@ -159,6 +159,9 @@ static int handle_cmd_reset(struct mboxctl_context *context)
+ {
+ 	int rc;
+ 
++	/* microwatt needs more time to read the pnor image... */
++	sd_bus_set_method_call_timeout(context->bus, 50 * 1000 * 1000);
++
+ 	rc = mboxctl_directive(context, "Reset");
+ 	MSG_OUT("Reset: %s\n", rc ? strerror(-rc) : "Success");
+ 
+-- 
+2.35.1
+

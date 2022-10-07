@@ -12,3 +12,5 @@ do_install:append:df-openpower-ubi-fs() {
 	install -d ${D}${bindir}
 	install -m 0755 ${WORKDIR}/check_pnor_format.sh ${D}${bindir}/check_pnor_format.sh
 }
+
+SRC_URI:append:witherspoon-microwatt = " file://0001-mboxctl-bump-reset-timeout-for-microwatt.patch"
