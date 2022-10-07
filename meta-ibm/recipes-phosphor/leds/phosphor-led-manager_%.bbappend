@@ -60,3 +60,10 @@ do_install:append:p10bmc() {
     install -d ${D}${datadir}/${BPN}/
     install -m 0644 ${WORKDIR}/lamp-test-led-overrides.json ${D}${datadir}/${BPN}/
 }
+
+# Fixed led group config for witherspoon-microwatt
+SRC_URI:append:witherspoon-microwatt = " file://led-group-config.json"
+do_install:append:witherspoon-microwatt() {
+    install -d ${D}/etc/phosphor-led-manager
+    install -m 0644 ${WORKDIR}/led-group-config.json ${D}/etc/phosphor-led-manager/
+}
