@@ -1,0 +1,60 @@
+commit c3b55240357cf2434d65259941375583ba54982a
+Author: Matt Johnston <matt@codeconstruct.com.au>
+Date:   Wed Oct 5 17:26:27 2022 +0800
+
+    Allow "num" as an alternative to "pin" in gpio def
+    
+    "num" can be used on non-aspeed platforms to specify a pin
+    number rather than the aspeed-specific "pin".
+    
+    Also hardcode our own gpio, no more aspeed.
+
+diff --git a/inc/gpio.hpp b/inc/gpio.hpp
+index 6f0a67b..dd6049c 100644
+--- a/inc/gpio.hpp
++++ b/inc/gpio.hpp
+@@ -54,6 +54,7 @@ int configGroupGpio(buttonConfig& buttonCfg);
+ int configGpio(gpioInfo& gpioConfig);
+ 
+ uint32_t getGpioNum(const std::string& gpioPin);
++uint32_t getGpioBase();
+ void closeGpio(int fd);
+ // global json object which holds gpio_defs.json configs
+ extern nlohmann::json gpioDefs;
+diff --git a/meson.build b/meson.build
+index cd23767..b0e0792 100644
+--- a/meson.build
++++ b/meson.build
+@@ -14,7 +14,7 @@ conf_data.set_quoted('POWER_DBUS_OBJECT_NAME', '/xyz/openbmc_project/Chassis/But
+ conf_data.set_quoted('RESET_DBUS_OBJECT_NAME', '/xyz/openbmc_project/Chassis/Buttons/Reset0')
+ conf_data.set_quoted('ID_DBUS_OBJECT_NAME', '/xyz/openbmc_project/Chassis/Buttons/ID0')
+ conf_data.set_quoted('HS_DBUS_OBJECT_NAME', '/xyz/openbmc_project/Chassis/Buttons/HostSelector')
+-conf_data.set_quoted('GPIO_BASE_LABEL_NAME', '1e780000.gpio')
++conf_data.set_quoted('GPIO_BASE_LABEL_NAME', 'c0007000.gpio')
+ conf_data.set_quoted('CHASSIS_STATE_OBJECT_NAME', '/xyz/openbmc_project/state/chassis')
+ conf_data.set_quoted('CHASSISSYSTEM_STATE_OBJECT_NAME', '/xyz/openbmc_project/state/chassis_system')
+ conf_data.set_quoted('HOST_STATE_OBJECT_NAME', '/xyz/openbmc_project/state/host')
+diff --git a/src/main.cpp b/src/main.cpp
+index 5b5341d..52a8df9 100644
+--- a/src/main.cpp
++++ b/src/main.cpp
+@@ -83,7 +83,18 @@ int main(void)
+         else
+         {
+             gpioInfo gpioCfg;
+-            gpioCfg.number = getGpioNum(gpioConfig["pin"]);
++            if (gpioConfig.contains("pin")) {
++                // aspeed pin string, eg "pin": "A5"
++                gpioCfg.number = getGpioNum(gpioConfig["pin"]);
++            } else if (gpioConfig.contains("num")) {
++                // linux gpio pin number, eg "num": 10
++                uint32_t num = gpioConfig["num"];
++                gpioCfg.number = getGpioBase() + num;
++            } else {
++                phosphor::logging::log<phosphor::logging::level::ERR>(
++                    "Missing 'pin' or 'num' button config field");
++                return 1;
++            }
+             gpioCfg.direction = gpioConfig["direction"];
+             buttonCfg.gpios.push_back(gpioCfg);
+         }
